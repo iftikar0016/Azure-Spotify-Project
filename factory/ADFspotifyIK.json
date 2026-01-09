@@ -1,0 +1,9 @@
+{
+	"name": "ADFspotifyIK",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "89759173-463f-4f85-9bd6-0895b930bcec",
+		"tenantId": "4ab721c6-5310-48de-8015-3e098eaffaab"
+	}
+}
