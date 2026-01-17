@@ -119,7 +119,7 @@ Before building the pipelines, the following resources were set up in a dedicate
     - `dbo.fact_streams`
         
 
-> **[Insert Screenshot: Azure Portal showing Resource Group with ADF, SQL DB, and Storage Account]**
+![Insert Screenshot: Azure Portal showing Resource Group with ADF, SQL DB, and Storage Account](images/RG.png)
 
 ---
 
