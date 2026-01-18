@@ -602,7 +602,43 @@ I leveraged the **Gold Layer** tables (`fact_streams`, `dim_track`, `dim_artist`
 - **Exclusion:** I explicitly excluded `dim_user` data because the model predicts _song_ popularity, independent of specific user behaviors.
     
 
-> **[Insert Screenshot: Spark SQL logic joining Fact and Dim tables for the training set]**
+```python 
+import pyspark.sql.functions as F
+
+# 1. Aggregate FactStream to get Target Variable (Total Streams per Track)
+# We group by track_id to see how many times each song was played.
+df_popularity = spark.sql("""
+    SELECT 
+        track_id, 
+        COUNT(stream_id) as total_streams
+    FROM spotify_cata.gold.factstream
+    GROUP BY track_id
+""")
+
+# 2. Join with Dimensions to get Features
+# Note: We join DimTrack and DimArtist. 
+# We do NOT join DimUser because we are predicting SONG popularity, not User behavior.
+df_features = spark.sql("""
+    SELECT 
+        t.track_id,
+        t.duration_sec,
+        t.release_date,
+        a.genre,
+        a.country as artist_country
+    FROM spotify_cata.gold.dimtrack t
+    JOIN spotify_cata.gold.dimartist a ON t.artist_id = a.artist_id
+""")
+
+# 3. Final Dataset
+df_full = df_features.join(df_popularity, "track_id", "left").fillna(0)
+
+# 4. Feature Engineering in Spark (Extract Year from Date)
+df_full = df_full.withColumn("release_year", F.year("release_date"))
+
+# Convert to Pandas for Scikit-Learn (Limit to 100k rows if data is huge)
+pdf = df_full.limit(100000).toPandas()
+```
+
 
 ### 3. Model Training & MLflow Integration
 
