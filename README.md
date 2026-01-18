@@ -452,7 +452,7 @@ dlt.apply_changes(
 )
 ```
 
-> **[Insert Screenshot: The Code Cell showing the `dlt.apply_changes` logic]**
+> ![Insert Screenshot: The Code Cell showing the `dlt.apply_changes` logic](images/DLT.png)
 
 ---
 
