@@ -3,17 +3,23 @@
 
 ### 1. Project Overview
 
-This project builds a complete end-to-end data engineering pipeline on Microsoft Azure. It simulates a real-world scenario where we analyze **Spotify** music data (artists, albums, tracks) to derive insights. The project moves data from a transactional system (Azure SQL Database) to a Data Lake, processes it using the "Medallion Architecture" (Bronze, Silver, Gold), and prepares it for reporting.
+This project builds a modern, scalable **Data & AI Platform** on Microsoft Azure. It goes beyond traditional data engineering by integrating **Machine Learning** and **Generative AI** directly into the pipeline.
+
+The solution simulates a real-world scenario for a music streaming service (like Spotify), handling the complete lifecycle of data: from ingestion and processing to predictive modeling and conversational analytics.
 
 **Key Features:**
 
-- **Incremental Data Loading:** Efficiently processing only new or modified data.
+- **Metadata-Driven Ingestion:** A dynamic, robust pipeline handling incremental loading for multiple tables using **Azure Data Factory**.
     
-- **Backfilling Mechanism:** Capability to re-process historical data dynamically.
+- **Lakehouse Architecture:** Processing data through Bronze, Silver, and Gold layers using **Databricks** and **Delta Lake**.
     
-- **Schema Evolution:** Handling changes in source data structure automatically.
+- **Advanced Data Modeling:** Implementing **SCD Type 2** to track historical changes using **Delta Live Tables (DLT)**.
     
-- **CI/CD:** Automated deployment using GitHub and Databricks Asset Bundles (DABs).
+- **Predictive Analytics (ML):** A machine learning model to predict potential "Hit Songs" based on audio features and metadata.
+    
+- **Generative AI Agent:** A "Chat with Data" interface powered by **LLMs (Llama 3)** that allows users to query the database using natural language.
+    
+- **CI/CD & DevOps:** Fully automated deployment using **Databricks Asset Bundles (DABs)**.
     
 
 ---
@@ -351,15 +357,30 @@ Python
 ```
 from jinja2 import Template
 
-query_template = """
-SELECT 
-    {% for col in columns %}
-        {{ col }}{% if not loop.last %}, {% endif %}
-    {% endfor %}
-FROM {{ base_table }}
-{% for join in joins %}
-    LEFT JOIN {{ join.table }} ON {{ join.condition }}
-{% endfor %}
+query_text = """
+
+            SELECT 
+                {% for param in parameters %}
+                    {{ param.cols }} 
+                        {% if not loop.last %}
+                            , 
+                        {% endif %}
+                {% endfor %}
+            FROM 
+                {% for param in parameters %}
+                    {% if loop.first %}
+                        {{ param['table'] }} AS {{ param['alias'] }}
+                    {% endif %}
+                {% endfor %}
+                {% for param in parameters %}
+                    {% if not loop.first %}
+                    LEFT JOIN 
+                        {{ param['table'] }} AS {{ param['alias'] }} 
+                    ON 
+                        {{ param['condition'] }}
+                    {% endif %}
+                {% endfor %}
+            
 """
 # Renders the final SQL query dynamically
 ```
@@ -560,23 +581,124 @@ Once validated, I deployed the exact same bundle to the production target. This 
 
 ---
 
+# 🤖 Part 6: Machine Learning (Predicting "Hits")
+
+### 1. The Business Problem
+
+Beyond just storing data, I wanted to deliver predictive value. The goal was to build a classification model to identify **Potential Hits**—songs likely to achieve high streaming numbers—based on their metadata (genre, duration, artist, etc.).
+
+### 2. Data Preparation (Feature Engineering)
+
+I leveraged the **Gold Layer** tables (`fact_streams`, `dim_track`, `dim_artist`) to create a training dataset.
+
+- **Target Variable:** Defined a "Hit" as a song with streams greater than the median stream count (Binary Classification: 1 = Hit, 0 = Non-Hit).
+    
+- **Feature Selection:**
+    
+    - **Numeric:** `duration_sec`, `release_year` (extracted from `release_date`).
+        
+    - **Categorical:** `genre`, `artist_country`.
+        
+- **Exclusion:** I explicitly excluded `dim_user` data because the model predicts _song_ popularity, independent of specific user behaviors.
+    
+
+> **[Insert Screenshot: Spark SQL logic joining Fact and Dim tables for the training set]**
+
+### 3. Model Training & MLflow Integration
+
+I used **Scikit-Learn** within Databricks to build a Random Forest Classifier.
+
+- **Pipeline:** Implemented a Scikit-Learn `Pipeline` with a `ColumnTransformer` to handle preprocessing automatically:
+    
+    - **StandardScaler** for numeric features.
+        
+    - **OneHotEncoder** (with `handle_unknown='ignore'`) for categorical features.
+        
+- **MLflow Tracking:** I used `mlflow.sklearn.autolog()` to automatically log experiment runs, parameters (e.g., `n_estimators=100`, `max_depth=10`), and metrics.
+    
+
+Results:
+
+The initial model achieved an accuracy of ~62%, providing a baseline for identifying potential hits based purely on metadata.
+
+> **[Insert Screenshot: MLflow UI showing the Experiment Run and Accuracy Metrics]**
+
+---
+
+# 💬 Part 7: AI Data Agent (Chat with Your Data)
+
+### 1. The Concept: Natural Language to SQL
+
+To democratize data access for non-technical stakeholders (like music executives), I built an **AI Agent**. This allows users to ask questions in plain English (e.g., _"Who are the top 3 artists?"_) and receive accurate data answers immediately, without writing SQL.
+
+### 2. Tech Stack
+
+- **Orchestration:** **LangChain** (specifically `create_sql_query_chain`).
+    
+- **LLM:** **Groq (Llama-3.3-70b)**. I chose Groq for its ultra-low latency, which is critical for real-time interactive agents.
+    
+- **Execution Engine:** **SparkSQL**. The agent generates Spark-compliant SQL queries that run directly against the Delta Tables.
+    
+
+### 3. Implementation Details
+
+- **Virtual Database:** I configured the agent to see only specific Gold tables (`fact_streams`, `dim_artists`, `dim_tracks`) to ensure it focuses on relevant business data.
+    
+- **Prompt Engineering:** I designed a strict `PromptTemplate` that instructs the LLM to:
+    
+    1. Use specific table definitions.
+        
+    2. Return **ONLY** the syntactically correct SparkSQL query.
+        
+    3. Avoid any markdown or conversational filler.
+        
+
+Workflow:
+
+User Question $\rightarrow$ LLM (Generates SQL) $\rightarrow$ Spark (Executes Query) $\rightarrow$ Final Answer.
+
+**Example:**
+
+- **Input:** "What is the average duration of songs in the Pop genre?"
+    
+- **Generated SQL:** `SELECT average_duration FROM ... JOIN ...`
+    
+- **Output:** `212.7 seconds`
+    
+
+> **[Insert Screenshot: Notebook output showing the Q&A interaction]**
+
+---
+
 ### 🎓 Project Conclusion
 
-Summary:
+**Summary:**
 
-This project successfully established an end-to-end data pipeline that:
+This project successfully demonstrates a full-stack data capability, transforming raw raw transactional data into intelligence.
 
-1. **Ingests** data dynamically from Azure SQL to ADLS Gen2 using Metadata-driven ADF pipelines.
+1. **Ingested** & **Processed** complex datasets at scale using Azure Data Factory and Databricks.
     
-2. **Processes** data through a Medallion Architecture (Bronze $\rightarrow$ Silver $\rightarrow$ Gold) using Databricks Auto Loader & PySpark.
+2. **Ensured Quality** and historical accuracy using Medallion Architecture and SCD Type 2 strategies.
     
-3. **Automates** complex warehousing tasks like SCD Type 2 using Delta Live Tables (DLT).
+3. **Unlocked Value** by deploying a Random Forest Classifier to identify future trends (Hit Prediction).
     
-4. **Deploys** securely using modern CI/CD practices with Databricks Asset Bundles.
+4. **Democratized Access** by building an AI Agent that removes the technical barrier to entry, allowing stakeholders to "just ask" questions in plain English.
     
 
-Business Value:
+**Business Value Delivered:**
 
-The solution provides the analytics team with a reliable, historical view of user listening habits, enabling data-driven decision-making for artist recommendations and user retention strategies.
+- **Operational Efficiency:** Automated data flows reduce manual reporting time by 100%.
+    
+- **Strategic Insight:** The ML model helps A&R teams identify promising tracks early, potentially increasing revenue.
+    
+- **Self-Service Analytics:** The AI Agent empowers non-technical executives to get instant answers without waiting for data analysts to write SQL.
+    
+
+**Future Scope:**
+
+- Retraining the ML model with user behavioral data (skip rates, playlist adds).
+    
+- Deploying the AI Agent as a Slack/Teams bot for wider organizational use.
+    
 
 ---
