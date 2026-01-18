@@ -621,7 +621,7 @@ Results:
 
 The initial model achieved an accuracy of ~62%, providing a baseline for identifying potential hits based purely on metadata.
 
-> **[Insert Screenshot: MLflow UI showing the Experiment Run and Accuracy Metrics]**
+> ![Insert Screenshot: MLflow UI showing the Experiment Run and Accuracy Metrics](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/ML_Score.png)
 
 ---
 
@@ -666,7 +666,7 @@ User Question $\rightarrow$ LLM (Generates SQL) $\rightarrow$ Spark (Executes Qu
 - **Output:** `212.7 seconds`
     
 
-> **[Insert Screenshot: Notebook output showing the Q&A interaction]**
+> ![Insert Screenshot: Notebook output showing the Q&A interaction](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/Ai_Agent_Output.png)
 
 ---
 
