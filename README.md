@@ -688,6 +688,34 @@ To democratize data access for non-technical stakeholders (like music executives
         
     3. Avoid any markdown or conversational filler.
         
+```python
+from langchain_classic.chains import create_sql_query_chain
+from langchain_core.prompts import PromptTemplate
+
+# Custom prompt that instructs LLM to return only SQL
+custom_prompt = PromptTemplate.from_template(
+    """Given an input question, create a syntactically correct {dialect} query to run.
+    
+Only use the following tables:
+{table_info}
+
+Question: {input}
+
+Return ONLY the SQL query without any explanation, markdown formatting, or additional text.
+SQL Query:"""
+)
+
+# 1. Chain that generates the SQL query with custom prompt
+write_query = create_sql_query_chain(llm, spark_sql, prompt=custom_prompt)
+
+# 2. Function that executes the SQL query using Spark
+def execute_query(query):
+    result = spark.sql(query.strip())
+    return result.toPandas().to_string()
+
+# 3. Combine them: Write Query -> Execute Query -> Answer
+chain = write_query | execute_query
+```
 
 Workflow:
 
