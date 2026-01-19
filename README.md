@@ -757,12 +757,5 @@ This project successfully demonstrates a full-stack data capability, transformin
     
 - **Self-Service Analytics:** The AI Agent empowers non-technical executives to get instant answers without waiting for data analysts to write SQL.
     
-
-**Future Scope:**
-
-- Retraining the ML model with user behavioral data (skip rates, playlist adds).
     
-- Deploying the AI Agent as a Slack/Teams bot for wider organizational use.
-    
-
 ---
