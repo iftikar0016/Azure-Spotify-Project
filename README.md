@@ -123,7 +123,7 @@ Before building the pipelines, the following resources were set up in a dedicate
     - `dbo.fact_streams`
         
 
-![Insert Screenshot: Azure Portal showing Resource Group with ADF, SQL DB, and Storage Account](images/RG.png)
+![Insert Screenshot: Azure Portal showing Resource Group with ADF, SQL DB, and Storage Account](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/RG.png)
 
 ---
 
@@ -441,7 +441,7 @@ dlt.apply_changes(
 )
 ```
 
-> ![Insert Screenshot: The Code Cell showing the `dlt.apply_changes` logic](images/DLT.png)
+> ![Insert Screenshot: The Code Cell showing the `dlt.apply_changes` logic](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/DLT.png)
 
 ---
 
