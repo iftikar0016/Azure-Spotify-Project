@@ -45,9 +45,7 @@ The solution follows the **Lakehouse / Medallion Architecture**:
 5. **Monitoring:** **Azure Logic Apps** sends email alerts on pipeline failures.
     
 
-_(Paste your Architecture Diagram screenshot here)_
-
-> **[Insert Screenshot: Project Architecture Diagram]**
+![Insert Screenshot: Project Architecture Diagram](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/Architecture.png)
 
 ---
 
@@ -160,8 +158,6 @@ Two reusable Linked Services were created to establish connections:
     
 - **`ls_AdlsGen2`**: Connects to the destination Azure Data Lake Storage Gen2.
     
-
-> **[Insert Screenshot: ADF Manage Tab showing Linked Services]**
 
 ---
 
@@ -279,8 +275,6 @@ To ensure governance and security, I avoided the old "Mount Point" approach and 
 - **Compute:** Used **Serverless Compute** for fast startup times and efficient scaling.
     
 
-> **[Insert Screenshot: Databricks Catalog Explorer showing 'spotify_catalog' and External Locations]**
-
 ---
 
 ### 2. Ingestion Strategy: Auto Loader (`cloudFiles`)
@@ -303,7 +297,7 @@ df = spark.readStream.format("cloudFiles") \
     .load(bronze_path)
 ```
 
-> **[Insert Screenshot: Notebook cell showing Auto Loader read logic]**
+![Insert Screenshot: Notebook cell showing Auto Loader read logic](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/Autoloader_read.png)
 
 ---
 
@@ -326,9 +320,6 @@ To keep the code clean and reusable, I applied **Software Engineering Best Pract
     
 - **`dim_artists`:** Removed special characters from names using **Regex** (`regexp_replace`).
     
-
-> **[Insert Screenshot: The 'utils' folder structure and the 'Reusable' class code]**
-
 ---
 
 ### 4. Advanced: Metadata-Driven Transformation (Jinja Templates)
@@ -384,8 +375,8 @@ query_text = """
 """
 # Renders the final SQL query dynamically
 ```
-
-> **[Insert Screenshot: Jinja Template Logic dynamically generating a SQL query]**
+**Jinja Template Logic dynamically generating a SQL query**
+![Insert Screenshot: Jinja Template Logic dynamically generating a SQL query](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/jinja_sql_output.png)
 
 ---
 
@@ -404,7 +395,7 @@ For the final "Gold" layer, we needed to track the **history of changes**.
 
 Instead of writing complex merge logic manually (which is error-prone), I used **Delta Live Tables (DLT)**. This allows for a **Declarative** approach—I simply define _what_ I want (e.g., "Keep history based on these keys"), and DLT handles the _how_ (inserts, updates, expiring old records).
 
-> **[Insert Screenshot: The Lakeflow / DLT Pipeline Graph showing the flow from Staging to Dim]**
+![Insert Screenshot: The Lakeflow / DLT Pipeline Graph showing the flow from Staging to Dim](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/Pipeline_P2.png)
 
 ---
 
@@ -487,7 +478,7 @@ The entire workflow is managed in the **Lakeflow Pipelines** UI (formerly DLT UI
 - **Observability:** The UI provides a visual graph showing data lineage, processing speed, and the number of records dropped by validation rules.
     
 
-> **[Insert Screenshot: The DLT Pipeline execution screen showing "Completed" status and record counts]**
+![Insert Screenshot: The DLT Pipeline execution screen showing "Completed" status and record counts](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/gold_pl_completed.png)
 
 ---
 
@@ -515,7 +506,7 @@ I initialized the project using the Databricks CLI within the workspace terminal
     - `resources/`: Definitions for jobs and workflows.
         
 
-> **[Insert Screenshot: The Folder Structure of the Asset Bundle in Databricks Workspace]**
+![Insert Screenshot: The Folder Structure of the Asset Bundle in Databricks Workspace](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/DAB_yaml.png)
 
 ### 3. Configuration (`databricks.yml`)
 
@@ -550,7 +541,6 @@ targets:
     root_path: /Shared/prod/spotify_project
 ```
 
-> **[Insert Screenshot: The `databricks.yml` file configuration]**
 
 ### 4. Deployment (The CI/CD Workflow)
 
@@ -577,7 +567,7 @@ Once validated, I deployed the exact same bundle to the production target. This 
 - `databricks bundle deploy -t prod`
     
 
-> **[Insert Screenshot: The Terminal showing the "Deployment Complete" success message]**
+![Insert Screenshot: The Terminal showing the "Deployment Complete" success message](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/databricks_terminal.png)
 
 ---
 
@@ -655,9 +645,9 @@ I used **Scikit-Learn** within Databricks to build a Random Forest Classifier.
 
 Results:
 
-The initial model achieved an accuracy of ~62%, providing a baseline for identifying potential hits based purely on metadata.
+The initial model achieved an accuracy of ~65%, providing a baseline for identifying potential hits based purely on metadata.
 
-> ![Insert Screenshot: MLflow UI showing the Experiment Run and Accuracy Metrics](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/ML_Score.png)
+![Insert Screenshot: MLflow UI showing the Experiment Run and Accuracy Metrics](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/ML_score.png)
 
 ---
 
