@@ -217,7 +217,7 @@ This pipeline handles the extraction logic for a single table. It is designed to
 - **Logic:** Writes the `NewWatermark` value back to the `cdc.json` file in the Data Lake, ready for the next run.
     
 
-> **[Insert Screenshot: The 'pl_ingest_incremental' pipeline canvas]**
+![Insert Screenshot: The 'pl_ingest_incremental' pipeline canvas](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/ADF_IncrementalLoop.png)
 
 ---
 
@@ -233,8 +233,6 @@ A common issue in incremental pipelines is generating empty files when no new da
         
     - **False:** Do not update the watermark. Instead, use a **Delete Activity** to remove the empty file generated in the Bronze layer to keep the lake clean.
         
-
-> **[Insert Screenshot: The 'If Condition' logic for 0 rows]**
 
 ---
 
@@ -258,7 +256,7 @@ To avoid creating five separate pipelines for five tables, I created a parent pi
 - **Execution:** The loop iterates through this list and triggers the `pl_ingest_incremental` pipeline for each item, passing the dynamic parameters.
     
 
-> **[Insert Screenshot: The Master Pipeline with ForEach Loop]**
+![Insert Screenshot: The Master Pipeline with ForEach Loop](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/ADF_ForEach.png)
 
 ---
 
