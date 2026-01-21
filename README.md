@@ -97,7 +97,7 @@ Before building the pipelines, the following resources were set up in a dedicate
         
     - **Collaboration Branch:** `main`
         
-    - **Feature Branch:** Created a new branch (e.g., `dev` or `anchal`) for development to follow CI/CD best practices.
+    - **Feature Branch:** Created a new branch (e.g., `dev` ) for development to follow CI/CD best practices.
         
 
 #### **C. Azure SQL Database (The Source)**
