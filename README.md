@@ -45,7 +45,7 @@ The solution follows the **Lakehouse / Medallion Architecture**:
 5. **Monitoring:** **Azure Logic Apps** sends email alerts on pipeline failures.
     
 
-![Insert Screenshot: Project Architecture Diagram](https://github.com/iftikar0016/Azure-Spotify-Project/blob/main/images/Architecture.png)
+![Insert Screenshot: Project Architecture Diagram](https://raw.githubusercontent.com/iftikar0016/Azure-Spotify-Project/refs/heads/main/images/spotify-architecture.png)
 
 ---
 
