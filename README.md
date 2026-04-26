@@ -142,7 +142,7 @@ The source data mimics a Spotify database schema:
 
 ---
 
-# 🛠️ Part 2: Data Ingestion (Source to Bronze)
+# Data Ingestion (Source to Bronze)
 
 ### 1. The Strategy: Metadata-Driven & Incremental
 
@@ -260,7 +260,7 @@ To avoid creating five separate pipelines for five tables, I created a parent pi
 
 ---
 
-# 🧠 Part 3: Data Transformation (Bronze to Silver)
+# Data Transformation (Bronze to Silver)
 
 ### 1. Unity Catalog & Environment Setup
 
@@ -378,7 +378,7 @@ query_text = """
 
 ---
 
-# 🏆 Part 4: Gold Layer (SCD Type 2 & Data Quality)
+# Gold Layer (SCD Type 2 & Data Quality)
 
 ### 1. The Goal: Slowly Changing Dimensions (SCD Type 2)
 
@@ -480,7 +480,7 @@ The entire workflow is managed in the **Lakeflow Pipelines** UI (formerly DLT UI
 
 ---
 
-# 🚀 Part 5: CI/CD & Production Deployment (Databricks Asset Bundles)
+# CI/CD & Production Deployment (Databricks Asset Bundles)
 
 ### 1. The Strategy: moving to "Infrastructure as Code" (IaC)
 
@@ -569,7 +569,7 @@ Once validated, I deployed the exact same bundle to the production target. This 
 
 ---
 
-# 🤖 Part 6: Machine Learning (Predicting "Hits")
+# Machine Learning (Predicting "Hits")
 
 ### 1. The Business Problem
 
@@ -649,7 +649,7 @@ The initial model achieved an accuracy of ~65%, providing a baseline for identif
 
 ---
 
-# 💬 Part 7: AI Data Agent (Chat with Your Data)
+# AI Data Agent (Chat with Your Data)
 
 ### 1. The Concept: Natural Language to SQL
 
