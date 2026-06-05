@@ -1,5 +1,5 @@
 
-# 🎵 Spotify End-to-End Azure Data Engineering Project
+# 🎵 Spotify End-to-End Azure Data & AI Engineering Project
 
 ### 1. Project Overview
 
